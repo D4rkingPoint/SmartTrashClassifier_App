@@ -1,4 +1,4 @@
-package com.surendramaran.yolov8tflite // Asegúrate que el package sea el correcto
+package com.surendramaran.yolov8tflite
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,10 +8,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.text.color
-
-// No necesitas importar R.color.bounding_box_color si los colores vienen de ObjectColors
-// import androidx.core.content.ContextCompat
-// import yolov8tflite.R // Comenta o elimina esta línea
+import java.util.Locale // Para formatear el float
 
 class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -28,9 +25,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
     fun clear() {
         results = listOf()
-        // No necesitas resetear los paints si los reconfiguras en initPaints o en draw
         invalidate()
-        // initPaints() // Podrías llamar a initPaints aquí si es necesario resetear a un estado base
     }
 
     private fun initPaints() {
@@ -40,10 +35,8 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
         textPaint.color = Color.WHITE
         textPaint.style = Paint.Style.FILL
-        textPaint.textSize = 50f
+        textPaint.textSize = 50f // Puedes ajustar el tamaño si el texto se vuelve muy largo
 
-        // boxPaint se configurará dinámicamente en el método draw,
-        // pero puedes establecer propiedades comunes aquí.
         boxPaint.strokeWidth = 8F
         boxPaint.style = Paint.Style.STROKE
     }
@@ -51,37 +44,53 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
 
-        results.forEach { result -> // Cambié 'it' a 'result' para mayor claridad
+        results.forEach { result ->
             val left = result.x1 * width
             val top = result.y1 * height
             val right = result.x2 * width
             val bottom = result.y2 * height
 
-            // *** INICIO DE LA MODIFICACIÓN ***
-            // Obtener el color de la bbox basado en la clase del resultado
             val BboxColor = ObjectColors.getColorForClass(result.clsName)
-            boxPaint.color = BboxColor // Aplicar el color al Paint de la bbox
-            // *** FIN DE LA MODIFICACIÓN ***
+            boxPaint.color = BboxColor
 
             canvas.drawRect(left, top, right, bottom, boxPaint)
-            val drawableText = result.clsName // El nombre de la clase ya lo tienes aquí
 
-            // Opcional: Si quieres que el fondo del texto también cambie de color
-            // podrías hacer algo como:
-            // textBackgroundPaint.color = bboxColor // O un color contrastante
-            // O si quieres mostrar el nombre del color del basurero:
-            // val binColorName = ObjectColors.getBinColorNameForClass(result.clsName)
-            // val displayText = "${result.clsName} (${binColorName})"
+            // *** MODIFICACIÓN PARA MOSTRAR LA CONFIANZA ***
+            // Formatea la confianza a un porcentaje o a dos decimales
+            // Opción 1: Como porcentaje (ej. 98%)
+            // val confidenceText = String.format(Locale.US, "%d%%", (result.cnf * 100).toInt())
+            // Opción 2: Como decimal (ej. 0.98)
+            val confidenceText = String.format(Locale.US, "%.2f", result.cnf)
+
+            val drawableText = "${result.clsName} ($confidenceText)" // Combina clase y confianza
+            // *** FIN DE LA MODIFICACIÓN ***
+
 
             textBackgroundPaint.getTextBounds(drawableText, 0, drawableText.length, bounds)
             val textWidth = bounds.width()
             val textHeight = bounds.height()
 
+            // Asegúrate de que el fondo del texto no se salga de la pantalla si está cerca del borde derecho
+            val textBgRight = if (left + textWidth + BOUNDING_RECT_TEXT_PADDING > width) {
+                width.toFloat()
+            } else {
+                left + textWidth + BOUNDING_RECT_TEXT_PADDING
+            }
+
+            // Asegúrate de que el fondo del texto no se salga de la pantalla si está cerca del borde inferior
+            // (esto es menos común para el texto en la parte superior de la bbox)
+            val textBgBottom = if (top + textHeight + BOUNDING_RECT_TEXT_PADDING > height) {
+                height.toFloat()
+            } else {
+                top + textHeight + BOUNDING_RECT_TEXT_PADDING
+            }
+
+
             canvas.drawRect(
                 left,
                 top,
-                left + textWidth + BOUNDING_RECT_TEXT_PADDING,
-                top + textHeight + BOUNDING_RECT_TEXT_PADDING,
+                textBgRight, // Usa el valor ajustado
+                top + textHeight + BOUNDING_RECT_TEXT_PADDING, // Podrías ajustar textBgBottom aquí también si es necesario
                 textBackgroundPaint
             )
             canvas.drawText(drawableText, left, top + bounds.height(), textPaint)
@@ -90,7 +99,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
     fun setResults(boundingBoxes: List<BoundingBox>) {
         results = boundingBoxes
-        invalidate() // Solicita que la vista se redibuje
+        invalidate()
     }
 
     companion object {
