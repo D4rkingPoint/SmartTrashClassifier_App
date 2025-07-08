@@ -6,6 +6,9 @@ Apunta la cámara hacia un objeto y la aplicación, usando un modelo de detecci�
 
 Esta herramienta busca facilitar y educar sobre la correcta separación de residuos, promoviendo prácticas de reciclaje más efectivas en el día a día.
 
+# Link aplicación móvil
+
+[Aplicación móvil](https://usmcl-my.sharepoint.com/:u:/g/personal/alvaro_pozo_usm_cl/EXi6_TaFnaRLixjxk2Y08Z8BSNe5HC2zchwTC4XtuBZrxg?e=THWZJ8)
 
 ## Base del proyecto
 Este proyecto fue desarrollado tomando como base el excelente trabajo del siguiente repositorio, sobre el cual se realizaron modificaciones y mejoras para adaptarlo a este caso de uso específico:
