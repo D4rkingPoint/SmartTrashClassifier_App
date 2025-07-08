@@ -1,0 +1,6 @@
+Compostable
+cardboard
+glass
+metal
+paper
+plastic
