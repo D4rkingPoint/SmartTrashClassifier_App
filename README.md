@@ -2,14 +2,14 @@
 ## Descripción
 SmartTrashClassifier es una aplicación para Android que utiliza la cámara de tu dispositivo y el poder del machine learning para ayudarte a reciclar de manera más eficiente.
 
-Apunta la cámara hacia un objeto y la aplicación, usando un modelo de detección de objetos YOLOv11 optimizado para móviles, lo identificará en tiempo real. Basado en la clasificación del objeto (ej. "botella", "cartón", "vidrio"), la app te mostrará instantáneamente en qué contenedor de basura debes depositarlo, junto con una imagen del tacho correcto para que no queden dudas.
+Apunta la cámara hacia un objeto y la aplicación, usando un modelo de detección de objetos YOLOv11 optimizado para móviles, lo identificará en tiempo real. Basado en la clasificación del objeto (ej. "glass", "carboard", "plastic"), la app te mostrará instantáneamente en qué contenedor de basura debes depositarlo, junto con una imagen del tacho correcto para que no queden dudas.
 
 Esta herramienta busca facilitar y educar sobre la correcta separación de residuos, promoviendo prácticas de reciclaje más efectivas en el día a día.
 
 
 ## Base del proyecto
 Este proyecto fue desarrollado tomando como base el excelente trabajo del siguiente repositorio, sobre el cual se realizaron modificaciones y mejoras para adaptarlo a este caso de uso específico:
-https://github.com/gy6543721/LiteRT/tree/main/LiteRT-Android)
+- [Repositorio del proyecto](https://github.com/gy6543721/LiteRT/tree/main/LiteRT-Android)
 
 Agradecimientos a Surendra Maran por proporcionar una base sólida y bien documentada.
 
@@ -17,9 +17,9 @@ Agradecimientos a Surendra Maran por proporcionar una base sólida y bien docume
 
 Para utilizar tu propio modelo de TensorFlow Lite (.tflite) en la aplicación, solo necesitas seguir dos sencillos pasos:
 
--[1] Copiar el modelo: Arrastra y suelta tu archivo .tflite dentro de la carpeta app/src/main/assets/ en la estructura del proyecto de Android Studio.
+- Copiar el modelo: Arrastra y suelta tu archivo .tflite dentro de la carpeta app/src/main/assets/ en la estructura del proyecto de Android Studio.
 
--[2] Actualizar la constante: Abre el archivo Constants.kt que se encuentra en SmartTrashClassifier_App\app\src\main\assets Dentro, modifica el valor de la constante MODEL_PATH para que coincida con el nombre exacto de tu nuevo archivo de modelo.
+- Actualizar la constante: Abre el archivo Constants.kt que se encuentra en SmartTrashClassifier_App\app\src\main\assets Dentro, modifica el valor de la constante MODEL_PATH para que coincida con el nombre exacto de tu nuevo archivo de modelo.
 
 ```
 const val MODEL_PATH = "yolo11n_float32.tflite"
